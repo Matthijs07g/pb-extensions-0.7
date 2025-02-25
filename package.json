@@ -1,0 +1,21 @@
+{
+  "name": "pb-extensions",
+  "version": "1.0.0",
+  "description": "A paperback extension repository",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "paperback-extensions-common": "^5.0.0-alpha.7"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/node": "^22.13.5",
+    "typescript": "^5.7.3"
+  }
+}
