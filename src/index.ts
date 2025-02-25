@@ -1,5 +1,5 @@
 //Replicate to use other sources
-export * from './sources/Asurascans';
+export * from './sources/Asurascans/Asurascans';
 
 
 

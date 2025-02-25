@@ -4,6 +4,8 @@
   "description": "A paperback extension repository",
   "main": "index.js",
   "scripts": {
+    "build": "pb build",
+    "watch": "pb watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0",
-    "paperback-extensions-common": "^5.0.0-alpha.7"
+    "paperback-extensions-common": "^4.3.5"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.35",

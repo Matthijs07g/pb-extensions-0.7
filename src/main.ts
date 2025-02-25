@@ -1,5 +1,5 @@
 import { info } from "console";
-import { AsuraScans, AsuraScansInfo } from "./sources/Asurascans";
+import { AsuraScans, AsuraScansInfo } from "./sources/Asurascans/Asurascans";
 
 export = [
     {

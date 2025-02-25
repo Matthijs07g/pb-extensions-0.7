@@ -1,0 +1,10 @@
+{
+    "id": "com.yourname.asurascans",
+    "name": "AsuraScans",
+    "version": "1.0.0",
+    "lang": "en",
+    "tags": ["manga", "english"],
+    "icon": "icon.png",
+    "website": "https://github.com/yourusername/asurascans-extension",
+    "updateUrl": "https://raw.githubusercontent.com/yourusername/asurascans-extension/main/manifest.json"
+  }
