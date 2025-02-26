@@ -1,10 +1,17 @@
 {
-    "id": "com.yourname.asurascans",
-    "name": "AsuraScans",
-    "version": "1.0.0",
-    "lang": "en",
-    "tags": ["manga", "english"],
-    "icon": "icon.png",
-    "website": "https://github.com/yourusername/asurascans-extension",
-    "updateUrl": "https://raw.githubusercontent.com/yourusername/asurascans-extension/main/manifest.json"
-  }
+  "id": "matthijs07g-pbextension",
+  "name": "Matthijs07g's Extension",
+  "version": "1.0.0",
+  "author": "Matthijs07g",
+  "description": "An extension that pulls manga's from multiple sites",
+  "website": "https://github.com/Matthijs07g",
+  "contentRating": "TEEN",
+  "sources": [
+    {
+      "id": "asurascans",
+      "name": "Asurascans",
+      "url": "https://asuracomic.net",
+      "version": "1.0.0"
+    }
+  ]
+}
