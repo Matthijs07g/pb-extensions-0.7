@@ -1,0 +1,34 @@
+{
+    "version": "0.1.0",
+    "configurations": [
+      {
+        "name": "Test Sources",
+        "type": "node",
+        "request": "launch",
+        "runtimeExecutable": "npm",
+        "runtimeArgs": [
+          "run",
+          "test",
+          "${input:sourceId}"
+        ],
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        "console": "integratedTerminal",
+        "autoAttachChildProcesses": true,
+        "internalConsoleOptions": "openOnSessionStart",
+        "presentation": {
+          "group": "Paperback",
+          "order": 1
+        }
+      }
+    ],
+    "inputs": [
+      {
+        "type": "promptString",
+        "id": "sourceId",
+        "description": "Enter the Source ID"
+      }
+    ]
+  }
+  
