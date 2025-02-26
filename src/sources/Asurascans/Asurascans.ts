@@ -1,3 +1,4 @@
+import { url } from 'inspector';
 import {
   Source,
   SourceInfo,
@@ -15,15 +16,15 @@ import {
   TagType
 } from 'paperback-extensions-common'
 
-const ASURA_BASE_URL = 'https://asurascans.com'
+const ASURA_BASE_URL = 'https://asuracomic.net'
 
 export const AsuraScansInfo: SourceInfo = {
   version: '1.0.0',
   name: 'AsuraScans',
   description: 'Extension for Asura Scans',
-  author: 'Matthijs',
-  authorWebsite: 'https://github.com/yourname',
-  icon: 'icon.png',
+  author: 'Matthijs07g',
+  authorWebsite: 'https://github.com/Matthijs07g',
+  icon: './include/icon.png',
   contentRating: ContentRating.EVERYONE,
   websiteBaseURL: 'asuracomic.net',
   language: LanguageCode.ENGLISH,
@@ -36,22 +37,24 @@ export const AsuraScansInfo: SourceInfo = {
 }
 
 export class AsuraScans extends Source {
-
+  requestManager: RequestManager = createRequestManager({
+    requestsPerSecond: 2,
+    requestTimeout: 15000
+});
+  
 
   ///////////////////////////////
   // Manga Metadata Fetching
   ///////////////////////////////
   async getMangaDetails(mangaId: string): Promise<Manga> {
-    const request = new Request(
-      `${ASURA_BASE_URL}/series/${mangaId}/`, 
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add other headers if needed
-        }
+    const request : Request = createRequestObject({
+      url: `${ASURA_BASE_URL}/series/${mangaId}/`,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add other headers if needed
       }
-    )
+    })
 
       const response = await this.requestManager.schedule(request, 1)
       const $ = this.cheerio.load(response.data)
@@ -94,9 +97,9 @@ export class AsuraScans extends Source {
   // Chapter Fetching
   ///////////////////////////////
   async getChapters(mangaId: string): Promise<Chapter[]> {
-    const request = new Request(
-      `${ASURA_BASE_URL}/series/${mangaId}/`, 
+    const request : Request = createRequestObject(
       {
+        url: `${ASURA_BASE_URL}/series/${mangaId}/`,
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -149,13 +152,13 @@ export class AsuraScans extends Source {
   }
 
   ///////////////////////////////
-  // Search Implementation
+  // Search Implementation    https://asuracomic.net/series?page=1&name={searchterm}
   ///////////////////////////////
   async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
-      const searchTerm = query.title?.replace(/ /g, '+') ?? ''
-      const request = new Request(
-          `${ASURA_BASE_URL}/?s=${searchTerm}&post_type=wp-manga`,
+      const searchTerm = query.title?.replace(/ /g, '+') ?? '%20'
+      const request : Request = createRequestObject(
           {
+            url: `${ASURA_BASE_URL}/series?name=${searchTerm}`,
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
