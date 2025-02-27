@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc && copy manifest.json dist\\",
+    "build-online": "tsc",
     "watch": "pb watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

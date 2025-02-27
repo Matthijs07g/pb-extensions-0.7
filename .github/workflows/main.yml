@@ -28,7 +28,7 @@ jobs:
 
     # 4. Build the project (compile TypeScript -> JavaScript)
     - name: Build
-      run: npm run build
+      run: npm run build-online
 
     # 5 Copy the manifest file to the dist folder
     - name: Copy manifest file
