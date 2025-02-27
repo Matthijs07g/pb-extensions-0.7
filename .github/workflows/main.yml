@@ -1,0 +1,38 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ "main" ]  # or your preferred branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Check out the repository
+    - name: Check out
+      uses: actions/checkout@v3
+
+    # 2. Set up Node
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'  # or 18, whichever your project requires
+
+    # 3. Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # 4. Build the project (compile TypeScript -> JavaScript)
+    - name: Build
+      run: npm run build
+
+    # 5. Deploy the dist folder to gh-pages branch
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
+        publish_branch: gh-pages
+        # Optionally disable Jekyll if you're serving plain JS
+        # enable_jekyll: false
