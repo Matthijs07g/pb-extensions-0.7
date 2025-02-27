@@ -4,7 +4,7 @@
   "description": "A paperback extension repository",
   "main": "index.js",
   "scripts": {
-    "build": "pb build",
+    "build": "tsc",
     "watch": "pb watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
