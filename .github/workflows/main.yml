@@ -30,7 +30,11 @@ jobs:
     - name: Build
       run: npm run build
 
-    # 5. Deploy the dist folder to gh-pages branch
+    # 5 Copy the manifest file to the dist folder
+    - name: Copy manifest file
+      run: cp manifest.json dist/
+
+    # 6. Deploy the dist folder to gh-pages branch
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
