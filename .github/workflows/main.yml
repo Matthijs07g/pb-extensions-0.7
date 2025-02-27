@@ -1,45 +1,59 @@
 name: Build and Deploy to GitHub Pages
 
-on:
+on: 
   push:
-    branches: [ "main" ]  # or your preferred branch
+    branches:
+      - '**'
+      - '!main'  # Exclude main branch
 
 jobs:
-  build-and-deploy:
+  build:
+    name: Bundle and Deploy
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write
+      contents: write  # Ensure write access for deployment
+
+    strategy:
+      matrix:
+        node-version: [20.x] 
 
     steps:
-    # 1. Check out the repository
-    - name: Check out
-      uses: actions/checkout@v3
+      # 1️⃣ Check out the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.2
 
-    # 2. Set up Node
-    - name: Set up Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.x'  # or 18, whichever your project requires
+      # 2️⃣ Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    # 3. Install dependencies
-    - name: Install dependencies
-      run: npm install
+      # 3️⃣ Extract the branch name
+      - name: Extract Branch Name
+        id: extract_branch
+        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
 
-    # 4. Build the project (compile TypeScript -> JavaScript)
-    - name: Build
-      run: npm run build-online
+      # 4️⃣ Checkout existing `gh-pages` branch (if exists)
+      - name: Checkout Existing Bundles
+        uses: actions/checkout@v4.1.2
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: bundles
 
-    # 5 Copy the manifest file to the dist folder
-    - name: Copy manifest file
-      run: cp manifest.json dist/
+      # 5️⃣ Install dependencies
+      - name: Install Dependencies
+        run: npm install
 
-    # 6. Deploy the dist folder to gh-pages branch
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
-        publish_branch: gh-pages
-        # Optionally disable Jekyll if you're serving plain JS
-        # enable_jekyll: false
+      # 6️⃣ Build the project and place it inside `bundles/{branch-name}`
+      - name: Build Project
+        run: npm run bundle -- --folder=bundles/${{ env.branch }}
+
+      # 7️⃣ Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: bundles
