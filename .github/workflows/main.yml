@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - '**'
-      - '!main'  # Exclude main branch
+      - 'main'  #! to Exclude main branch
 
 jobs:
   build:
