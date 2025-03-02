@@ -2986,9 +2986,9 @@ exports.AsuraScansInfo = {
     description: 'Extension for Asura Scans',
     author: 'Matthijs07g',
     authorWebsite: 'https://github.com/Matthijs07g',
-    icon: './include/icon.png',
+    icon: 'icon.png',
     contentRating: paperback_extensions_common_1.ContentRating.EVERYONE,
-    websiteBaseURL: 'asuracomic.net',
+    websiteBaseURL: 'https://asuracomic.net',
     language: paperback_extensions_common_1.LanguageCode.ENGLISH,
     sourceTags: [
         {
@@ -2998,8 +2998,8 @@ exports.AsuraScansInfo = {
     ]
 };
 class AsuraScans extends paperback_extensions_common_1.Source {
-    constructor() {
-        super(...arguments);
+    constructor(cheerio) {
+        super(cheerio);
         this.requestManager = createRequestManager({
             requestsPerSecond: 2,
             requestTimeout: 15000
