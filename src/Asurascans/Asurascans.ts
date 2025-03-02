@@ -1,3 +1,4 @@
+import { CheerioAPI } from 'cheerio';
 import { url } from 'inspector';
 import {
   Source,
@@ -24,9 +25,9 @@ export const AsuraScansInfo: SourceInfo = {
   description: 'Extension for Asura Scans',
   author: 'Matthijs07g',
   authorWebsite: 'https://github.com/Matthijs07g',
-  icon: './include/icon.png',
+  icon: 'icon.png',
   contentRating: ContentRating.EVERYONE,
-  websiteBaseURL: 'asuracomic.net',
+  websiteBaseURL: 'https://asuracomic.net',
   language: LanguageCode.ENGLISH,
   sourceTags: [
       {
@@ -37,6 +38,11 @@ export const AsuraScansInfo: SourceInfo = {
 }
 
 export class AsuraScans extends Source {
+
+  constructor(cheerio: CheerioAPI) {
+      super(cheerio)
+  }
+
   requestManager: RequestManager = createRequestManager({
     requestsPerSecond: 2,
     requestTimeout: 15000
