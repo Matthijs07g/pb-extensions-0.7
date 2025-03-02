@@ -387,18 +387,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Asurascans = exports.AsurascansInfo = void 0;
+exports.Reaperscans = exports.ReaperscansInfo = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
-const ASURA_BASE_URL = 'https://asuracomic.net';
-exports.AsurascansInfo = {
+const BASE_URL = 'https://reaperscans.com';
+exports.ReaperscansInfo = {
     version: '1.0.0',
-    name: 'AsuraScans',
-    description: 'Extension for Asura Scans',
+    name: 'ReaperScans',
+    description: 'Extension for ReaperScans',
     author: 'Matthijs07g',
     authorWebsite: 'https://github.com/Matthijs07g',
     icon: 'icon.png',
     contentRating: paperback_extensions_common_1.ContentRating.EVERYONE,
-    websiteBaseURL: 'https://asuracomic.net',
+    websiteBaseURL: BASE_URL,
     language: paperback_extensions_common_1.LanguageCode.ENGLISH,
     sourceTags: [
         {
@@ -407,7 +407,7 @@ exports.AsurascansInfo = {
         }
     ]
 };
-class Asurascans extends paperback_extensions_common_1.Source {
+class Reaperscans extends paperback_extensions_common_1.Source {
     constructor(cheerio) {
         super(cheerio);
         this.requestManager = createRequestManager({
@@ -422,7 +422,7 @@ class Asurascans extends paperback_extensions_common_1.Source {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             const request = createRequestObject({
-                url: `${ASURA_BASE_URL}/series/${mangaId}/`,
+                url: `${BASE_URL}/series/${mangaId}/`,
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -468,7 +468,7 @@ class Asurascans extends paperback_extensions_common_1.Source {
     getChapters(mangaId) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
-                url: `${ASURA_BASE_URL}/series/${mangaId}/`,
+                url: `${BASE_URL}/series/${mangaId}/`,
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -499,7 +499,7 @@ class Asurascans extends paperback_extensions_common_1.Source {
     getChapterDetails(mangaId, chapterId) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
-                url: `${ASURA_BASE_URL}/manga/${mangaId}/${chapterId}/`,
+                url: `${BASE_URL}/manga/${mangaId}/${chapterId}/`,
                 method: 'GET'
             });
             const response = yield this.requestManager.schedule(request, 1);
@@ -514,14 +514,14 @@ class Asurascans extends paperback_extensions_common_1.Source {
         });
     }
     ///////////////////////////////
-    // Search Implementation    https://asuracomic.net/series?page=1&name={searchterm}
+    // Search Implementation    
     ///////////////////////////////
     getSearchResults(query, metadata) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b;
             const searchTerm = (_b = (_a = query.title) === null || _a === void 0 ? void 0 : _a.replace(/ /g, '+')) !== null && _b !== void 0 ? _b : '%20';
             const request = createRequestObject({
-                url: `${ASURA_BASE_URL}/series?name=${searchTerm}`,
+                url: `${BASE_URL}/series?name=${searchTerm}`,
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -551,7 +551,7 @@ class Asurascans extends paperback_extensions_common_1.Source {
         return (_a = url.split('/').slice(-2, -1)[0]) !== null && _a !== void 0 ? _a : '';
     }
 }
-exports.Asurascans = Asurascans;
+exports.Reaperscans = Reaperscans;
 // Constants for easy maintenance
 const ASURA_SELECTORS = {
     manga: {
