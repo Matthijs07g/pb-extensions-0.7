@@ -29,12 +29,7 @@ export const ReaperscansInfo: SourceInfo = {
   contentRating: ContentRating.EVERYONE,
   websiteBaseURL: BASE_URL,
   language: LanguageCode.ENGLISH,
-  sourceTags: [
-      {
-          text: "Recommended",
-          type: TagType.BLUE
-      }
-  ]
+  sourceTags: []
 }
 
 export class Reaperscans extends Source {

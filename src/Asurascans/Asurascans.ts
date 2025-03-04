@@ -28,12 +28,7 @@ export const AsurascansInfo: SourceInfo = {
   contentRating: ContentRating.EVERYONE,
   websiteBaseURL: 'https://asuracomic.net',
   language: LanguageCode.ENGLISH,
-  sourceTags: [
-      {
-          text: "Recommended",
-          type: TagType.BLUE
-      }
-  ]
+  sourceTags: []
 }
 
 export class Asurascans extends Source {
