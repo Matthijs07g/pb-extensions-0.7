@@ -2990,12 +2990,7 @@ exports.AsurascansInfo = {
     contentRating: paperback_extensions_common_1.ContentRating.EVERYONE,
     websiteBaseURL: 'https://asuracomic.net',
     language: paperback_extensions_common_1.LanguageCode.ENGLISH,
-    sourceTags: [
-        {
-            text: "Recommended",
-            type: paperback_extensions_common_1.TagType.BLUE
-        }
-    ]
+    sourceTags: []
 };
 class Asurascans extends paperback_extensions_common_1.Source {
     constructor(cheerio) {

@@ -2990,12 +2990,7 @@ exports.ReaperscansInfo = {
     contentRating: paperback_extensions_common_1.ContentRating.EVERYONE,
     websiteBaseURL: BASE_URL,
     language: paperback_extensions_common_1.LanguageCode.ENGLISH,
-    sourceTags: [
-        {
-            text: "Recommended",
-            type: paperback_extensions_common_1.TagType.BLUE
-        }
-    ]
+    sourceTags: []
 };
 class Reaperscans extends paperback_extensions_common_1.Source {
     constructor(cheerio) {
