@@ -16,6 +16,7 @@ import {
   TagType,
   HomeSection
 } from 'paperback-extensions-common'
+import { parseHomeSections } from './AsuraParser';
 
 const ASURA_BASE_URL = 'https://asuracomic.net'
 
@@ -55,7 +56,9 @@ export class Asurascans extends Source {
 
     const response = await this.requestManager.schedule(request, 1)
     const $ = this.cheerio.load(response.data as string)
+    
     //parse section here
+    await parseHomeSections(this, $, sectionCallback)
   }
   
 
