@@ -34,15 +34,16 @@ export const AsurascansInfo: SourceInfo = {
 }
 
 export class Asurascans extends Source {
-
+  public readonly requestManager: RequestManager
   constructor(cheerio: CheerioAPI) {
       super(cheerio)
+      this.requestManager = createRequestManager({
+        requestsPerSecond: 2,
+        requestTimeout: 15000
+    });
   }
 
-  requestManager: RequestManager = createRequestManager({
-    requestsPerSecond: 2,
-    requestTimeout: 15000
-});
+  
 
   async getHomePageSections(sectionCallback: (section: HomeSection) => void): Promise<void> {
     const request : Request = createRequestObject({
@@ -55,9 +56,13 @@ export class Asurascans extends Source {
     })
 
     const response = await this.requestManager.schedule(request, 1)
+
+    if(!response.data) {
+      throw new Error('No response data')
+    }
+
     const $ = this.cheerio.load(response.data as string)
     
-    //parse section here
     await parseHomeSections(this, $, sectionCallback)
   }
   
