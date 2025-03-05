@@ -38,6 +38,8 @@ export class Asurascans extends Source {
 
   constructor(cheerio: CheerioAPI) {
       super(cheerio)
+      cheerio = require('cheerio')
+      this.cheerio = cheerio;
   }
 
   requestManager : RequestManager = createRequestManager({
