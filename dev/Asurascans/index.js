@@ -3121,6 +3121,8 @@ class Asurascans extends paperback_extensions_common_1.Source {
                 url: `${ASURA_BASE_URL}`,
                 method: 'GET'
             });
+            if (!this.cheerio)
+                throw new Error('Cheerio is not initialized!');
             const response = yield this.requestManager.schedule(request, 1);
             if (!response.data) {
                 throw new Error('No response data');
