@@ -66,6 +66,7 @@ export class Asurascans extends Source {
       url: `${ASURA_BASE_URL}`,
       method: 'GET'
     })
+    if(!this.cheerio) throw new Error('Cheerio is not initialized!')
 
     const response = await this.requestManager.schedule(request, 1)
 
