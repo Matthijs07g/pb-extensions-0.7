@@ -387,8 +387,110 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.parseHomeSections = void 0;
+const paperback_extensions_common_1 = require("paperback-extensions-common");
+const parseHomeSections = (source, $, sectionCallback) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    try {
+        // Create featured section...
+        const featuredSection = createHomeSection({
+            id: 'featured',
+            title: 'Featured',
+            type: paperback_extensions_common_1.HomeSectionType.singleRowLarge
+        });
+        const featuredItems = [];
+        try {
+            const featuredElements = $('li.slide', 'ul.slider.animated').toArray();
+            for (const manga of featuredElements) {
+                const title = $('.slide-title h4', manga).text().trim();
+                const id = (_b = (_a = $('a', manga).attr('href')) === null || _a === void 0 ? void 0 : _a.split('/').slice(-2, -1)[0]) !== null && _b !== void 0 ? _b : '';
+                const image = (_c = $('img', manga).attr('src')) !== null && _c !== void 0 ? _c : '';
+                featuredItems.push(createMangaTile({
+                    id: id,
+                    image: image,
+                    title: createIconText({ text: title })
+                }));
+            }
+            featuredSection.items = featuredItems;
+            sectionCallback(featuredSection);
+        }
+        catch (err) {
+            console.error('Error parsing featured section:', err);
+        }
+        const latestSection = createHomeSection({
+            id: 'latest_updates',
+            title: 'Latest Updates',
+            type: paperback_extensions_common_1.HomeSectionType.singleRowNormal
+        });
+        const latestItems = [];
+        try {
+            const updateElements = $('div.w-full', 'div.grid.grid-rows-1').toArray();
+            for (const manga of updateElements) {
+                const title = $('.post-title h4', manga).text().trim();
+                const id = (_e = (_d = $('a', manga).attr('href')) === null || _d === void 0 ? void 0 : _d.split('/').slice(-2, -1)[0]) !== null && _e !== void 0 ? _e : '';
+                const image = (_f = $('img', manga).attr('src')) !== null && _f !== void 0 ? _f : '';
+                const subtitle = $('.chapter-item', manga).first().text().trim();
+                latestItems.push(createMangaTile({
+                    id: id,
+                    image: image,
+                    title: createIconText({ text: title }),
+                    subtitleText: createIconText({ text: subtitle })
+                }));
+            }
+            latestSection.items = latestItems;
+            sectionCallback(latestSection);
+        }
+        catch (err) {
+            console.error('Error parsing latest section:', err);
+        }
+        // Popular Section
+        const popularSection = createHomeSection({
+            id: 'popular_today',
+            title: 'Popular Today',
+            type: paperback_extensions_common_1.HomeSectionType.singleRowNormal
+        });
+        const popularItems = [];
+        try {
+            const popularElements = $('a', 'div.flex-wrap.hidden').toArray();
+            for (const manga of popularElements) {
+                const title = $('.post-title h4', manga).text().trim();
+                const id = (_h = (_g = $(manga).attr('href')) === null || _g === void 0 ? void 0 : _g.split('/').slice(-2, -1)[0]) !== null && _h !== void 0 ? _h : '';
+                const image = (_j = $('img', manga).attr('src')) !== null && _j !== void 0 ? _j : '';
+                popularItems.push(createMangaTile({
+                    id: id,
+                    image: image,
+                    title: createIconText({ text: title })
+                }));
+            }
+            popularSection.items = popularItems;
+            sectionCallback(popularSection);
+        }
+        catch (err) {
+            console.error('Error parsing popular section:', err);
+        }
+    }
+    catch (err) {
+        console.error('Error in parseHomeSections:', err);
+        throw err;
+    }
+});
+exports.parseHomeSections = parseHomeSections;
+
+},{"paperback-extensions-common":5}],49:[function(require,module,exports){
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Asurascans = exports.AsurascansInfo = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
+const AsuraParser_1 = require("./AsuraParser");
 const ASURA_BASE_URL = 'https://asuracomic.net';
 exports.AsurascansInfo = {
     version: '1.0.0',
@@ -423,6 +525,7 @@ class Asurascans extends paperback_extensions_common_1.Source {
             const response = yield this.requestManager.schedule(request, 1);
             const $ = this.cheerio.load(response.data);
             //parse section here
+            yield (0, AsuraParser_1.parseHomeSections)(this, $, sectionCallback);
         });
     }
     ///////////////////////////////
@@ -574,5 +677,5 @@ const ASURA_SELECTORS = {
     }
 };
 
-},{"paperback-extensions-common":5}]},{},[48])(48)
+},{"./AsuraParser":48,"paperback-extensions-common":5}]},{},[49])(49)
 });
