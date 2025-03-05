@@ -1,4 +1,4 @@
-import { CheerioAPI } from 'cheerio';
+import { CheerioAPI, Cheerio } from 'cheerio';
 import {
   Source,
   SourceInfo,
@@ -38,7 +38,6 @@ export class Asurascans extends Source {
 
   constructor(cheerio: CheerioAPI) {
       super(cheerio)
-      cheerio = require('cheerio')
       this.cheerio = cheerio;
   }
 

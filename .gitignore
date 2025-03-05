@@ -4,3 +4,4 @@
 .env
 /bundles
 /tmp
+/temp_build
