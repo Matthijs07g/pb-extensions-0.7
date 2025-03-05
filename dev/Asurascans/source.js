@@ -509,18 +509,27 @@ class Asurascans extends paperback_extensions_common_1.Source {
         super(cheerio);
         this.requestManager = createRequestManager({
             requestsPerSecond: 2,
-            requestTimeout: 15000
+            requestTimeout: 15000,
+            interceptor: {
+                interceptRequest: (request) => __awaiter(this, void 0, void 0, function* () {
+                    var _a;
+                    request.headers = Object.assign(Object.assign({}, ((_a = request.headers) !== null && _a !== void 0 ? _a : {})), {
+                        referer: `${ASURA_BASE_URL}/`,
+                        'user-agent': 'Mozilla/5.0'
+                    });
+                    return request;
+                }),
+                interceptResponse: (response) => __awaiter(this, void 0, void 0, function* () {
+                    return response;
+                })
+            }
         });
     }
     getHomePageSections(sectionCallback) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
                 url: `${ASURA_BASE_URL}`,
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add other headers if needed
-                }
+                method: 'GET'
             });
             const response = yield this.requestManager.schedule(request, 1);
             if (!response.data) {
@@ -538,11 +547,7 @@ class Asurascans extends paperback_extensions_common_1.Source {
             var _a;
             const request = createRequestObject({
                 url: `${ASURA_BASE_URL}/series/${mangaId}/`,
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add other headers if needed
-                }
+                method: 'GET'
             });
             const response = yield this.requestManager.schedule(request, 1);
             const $ = this.cheerio.load(response.data);
@@ -584,11 +589,7 @@ class Asurascans extends paperback_extensions_common_1.Source {
         return __awaiter(this, void 0, void 0, function* () {
             const request = createRequestObject({
                 url: `${ASURA_BASE_URL}/series/${mangaId}/`,
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add other headers if needed
-                }
+                method: 'GET'
             });
             const response = yield this.requestManager.schedule(request, 1);
             const $ = this.cheerio.load(response.data);
@@ -637,10 +638,7 @@ class Asurascans extends paperback_extensions_common_1.Source {
             const searchTerm = (_b = (_a = query.title) === null || _a === void 0 ? void 0 : _a.replace(/ /g, '+')) !== null && _b !== void 0 ? _b : '%20';
             const request = createRequestObject({
                 url: `${ASURA_BASE_URL}/series?name=${searchTerm}`,
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
+                method: 'GET'
             });
             const response = yield this.requestManager.schedule(request, 1);
             const $ = this.cheerio.load(response.data);
