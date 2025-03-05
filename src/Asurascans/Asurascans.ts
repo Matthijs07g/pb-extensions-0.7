@@ -14,7 +14,8 @@ import {
   RequestManager,
   PagedResults,
   TagType,
-  HomeSection
+  HomeSection,
+  Response
 } from 'paperback-extensions-common'
 import { parseHomeSections } from './AsuraParser';
 
@@ -34,25 +35,36 @@ export const AsurascansInfo: SourceInfo = {
 }
 
 export class Asurascans extends Source {
-  public readonly requestManager: RequestManager
+
   constructor(cheerio: CheerioAPI) {
       super(cheerio)
-      this.requestManager = createRequestManager({
-        requestsPerSecond: 2,
-        requestTimeout: 15000
-    });
   }
 
+  requestManager : RequestManager = createRequestManager({
+      requestsPerSecond: 2,
+      requestTimeout: 15000,
+      interceptor: {
+        interceptRequest: async (request: Request): Promise<Request> => {
+          request.headers = {
+            ...(request.headers ?? {}),
+            ...{
+                referer: `${ASURA_BASE_URL}/`,
+                'user-agent': 'Mozilla/5.0'
+              }
+        }
+          return request
+        },
+        interceptResponse: async (response: Response): Promise<Response> => {
+          return response
+        }
+      }
+  });
   
 
   async getHomePageSections(sectionCallback: (section: HomeSection) => void): Promise<void> {
     const request : Request = createRequestObject({
       url: `${ASURA_BASE_URL}`,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        // Add other headers if needed
-      }
+      method: 'GET'
     })
 
     const response = await this.requestManager.schedule(request, 1)
@@ -73,11 +85,7 @@ export class Asurascans extends Source {
   async getMangaDetails(mangaId: string): Promise<Manga> {
     const request : Request = createRequestObject({
       url: `${ASURA_BASE_URL}/series/${mangaId}/`,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        // Add other headers if needed
-      }
+      method: 'GET'
     })
 
       const response = await this.requestManager.schedule(request, 1)
@@ -124,11 +132,7 @@ export class Asurascans extends Source {
     const request : Request = createRequestObject(
       {
         url: `${ASURA_BASE_URL}/series/${mangaId}/`,
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add other headers if needed
-        }
+        method: 'GET'
       }
     )
 
@@ -183,10 +187,7 @@ export class Asurascans extends Source {
       const request : Request = createRequestObject(
           {
             url: `${ASURA_BASE_URL}/series?name=${searchTerm}`,
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-          }
+            method: 'GET'
       })
 
       const response = await this.requestManager.schedule(request, 1)
