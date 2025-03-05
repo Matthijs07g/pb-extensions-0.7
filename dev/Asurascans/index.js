@@ -3113,8 +3113,10 @@ class Asurascans extends paperback_extensions_common_1.Source {
                 }
             });
             const response = yield this.requestManager.schedule(request, 1);
+            if (!response.data) {
+                throw new Error('No response data');
+            }
             const $ = this.cheerio.load(response.data);
-            //parse section here
             yield (0, AsuraParser_1.parseHomeSections)(this, $, sectionCallback);
         });
     }
