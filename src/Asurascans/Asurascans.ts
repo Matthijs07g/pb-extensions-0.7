@@ -13,7 +13,8 @@ import {
   LanguageCode,
   RequestManager,
   PagedResults,
-  TagType
+  TagType,
+  HomeSection
 } from 'paperback-extensions-common'
 
 const ASURA_BASE_URL = 'https://asuracomic.net'
@@ -41,6 +42,21 @@ export class Asurascans extends Source {
     requestsPerSecond: 2,
     requestTimeout: 15000
 });
+
+  async getHomePageSections(sectionCallback: (section: HomeSection) => void): Promise<void> {
+    const request : Request = createRequestObject({
+      url: `${ASURA_BASE_URL}`,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add other headers if needed
+      }
+    })
+
+    const response = await this.requestManager.schedule(request, 1)
+    const $ = this.cheerio.load(response.data as string)
+    //parse section here
+  }
   
 
   ///////////////////////////////
