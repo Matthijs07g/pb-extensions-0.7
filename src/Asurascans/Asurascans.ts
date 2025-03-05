@@ -17,7 +17,8 @@ import {
   HomeSection,
   Response
 } from 'paperback-extensions-common'
-import { parseHomeSections } from './AsuraParser';
+import { isLastPage, parseHomeSections, parseViewMore } from './AsuraParser';
+import { is } from 'cheerio/dist/commonjs/api/traversing';
 
 const ASURA_BASE_URL = 'https://asuracomic.net'
 
@@ -78,6 +79,31 @@ export class Asurascans extends Source {
     const $ = this.cheerio.load(response.data as string)
     
     await parseHomeSections(this, $, sectionCallback)
+  }
+
+  async getViewMoreItems(homepageSectionId: string, metadata: any): Promise<PagedResults> {
+      const page: number = metadata?.page ?? 1
+      let param = ''
+
+      switch(homepageSectionId) {
+        case 'latest_updates':	param = `series?page=${page}`; break
+        default: throw new Error("Requested to view more items for a section ID which doesn't have view more: " + homepageSectionId)
+      }
+
+      const request = createRequestObject({
+          url: `${ASURA_BASE_URL}/${param}`,
+          method: 'GET'
+      })
+
+      const response = await this.requestManager.schedule(request, 1)
+      const $ = this.cheerio.load(response.data as string)
+      const manga = await parseViewMore(this, $)
+
+      metadata = !isLastPage($) ? { page: page + 1 } : undefined
+      return createPagedResults({
+        results: manga,
+        metadata
+      })
   }
   
 
@@ -208,6 +234,17 @@ export class Asurascans extends Source {
       })
 
       return createPagedResults({ results })
+  }
+
+  getCloudflareBypassRequest(): Request {
+      return createRequestObject({
+          url: ASURA_BASE_URL,
+          method: 'GET',
+          headers: {
+              referer: '${ASURA_BASE_URL}/',
+              'user-agent': 'Mozilla/5.0'
+          }
+      })
   }
 
   ///////////////////////////////

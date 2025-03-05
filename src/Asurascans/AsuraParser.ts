@@ -1,6 +1,6 @@
 import { CheerioAPI } from "cheerio";
 import { HomeSection, HomeSectionType, MangaTile } from "paperback-extensions-common";
-
+import { decode } from "html-entities";
 export const parseHomeSections = async (
   source: any,
   $: CheerioAPI,
@@ -101,3 +101,62 @@ export const parseHomeSections = async (
   }
 
 };
+
+export const parseViewMore = async (
+  source: any,
+  $: CheerioAPI
+): Promise<MangaTile[]> => {
+  const manga: MangaTile[] = []
+  const collectedIds: string[] = []
+
+  for (const item of $('a', 'div.grid.grid-cols-2').toArray()) {
+      const slug =
+          $(item).attr('href')?.replace(/\/$/, '')?.split('/').pop() ?? ''
+      if (!slug) continue
+
+      const id = await getMangaId(source, slug)
+
+      const image: string = $('img', item).first().attr('src') ?? ''
+      const title: string =
+          $('span.block.font-bold', item).first().text().trim() ?? ''
+      const subtitle: string =
+          $('span.block.font-bold', item).first().next().text().trim() ?? ''
+
+      if (!id || !title || collectedIds.includes(id)) continue
+      manga.push(
+          createMangaTile({
+              id: id,
+              image: image,
+              title: {
+                  text: decode(title)
+              },
+              subtitleText: {
+                  text: decode(subtitle)
+              }
+          })
+      )
+      collectedIds.push(id)
+  }
+  return manga
+}
+
+
+export const isLastPage = ($: CheerioAPI): boolean => {
+  let isLast = true;
+  const hasItems = $('a', 'div.grid.grid-cols-2').toArray().length > 0
+
+  if (hasItems) isLast = false
+  return isLast
+}
+
+function getMangaId(source: any, slug: string): string {
+  let id: string | null = slug
+  id = id.replace(/\/$/, '');
+  id = id.split('/').pop() ?? null
+  id = id?.substring(0, id?.lastIndexOf('-')) ?? null
+
+  if(!id) throw new Error(`Failed to parse ID for slug: ${slug}`)
+
+    id = id + '-'
+    return id
+}
