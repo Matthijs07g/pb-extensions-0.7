@@ -492,7 +492,7 @@ const parseViewMore = (source, $) => __awaiter(void 0, void 0, void 0, function*
     var _a, _b, _c, _d, _e, _f;
     const manga = [];
     const collectedIds = [];
-    for (const item of $('a', 'div.grid.grid-rows-1').toArray()) {
+    for (const item of $('a', 'div.grid.grid-cols-2').toArray()) {
         const slug = (_c = (_b = (_a = $(item).attr('href')) === null || _a === void 0 ? void 0 : _a.replace(/\/$/, '')) === null || _b === void 0 ? void 0 : _b.split('/').pop()) !== null && _c !== void 0 ? _c : '';
         if (!slug)
             continue;
@@ -519,21 +519,24 @@ const parseViewMore = (source, $) => __awaiter(void 0, void 0, void 0, function*
 exports.parseViewMore = parseViewMore;
 const isLastPage = ($) => {
     let isLast = true;
-    const hasItems = $('a', 'div.grid.grid-cols-2').toArray().length > 0;
+    const hasItems = $('a', 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-3 p-4').toArray().length > 0;
     if (hasItems)
         isLast = false;
     return isLast;
 };
 exports.isLastPage = isLastPage;
 function getMangaId(source, slug) {
+    const id = cleaner(slug) + '-';
+    return id;
+}
+function cleaner(str) {
     var _a, _b;
-    let id = slug;
+    let id = str;
     id = id.replace(/\/$/, '');
     id = (_a = id.split('/').pop()) !== null && _a !== void 0 ? _a : null;
     id = (_b = id === null || id === void 0 ? void 0 : id.substring(0, id === null || id === void 0 ? void 0 : id.lastIndexOf('-'))) !== null && _b !== void 0 ? _b : null;
     if (!id)
-        throw new Error(`Failed to parse ID for slug: ${slug}`);
-    id = id + '-';
+        throw new Error(`Failed to parse ID for: ${str}`);
     return id;
 }
 
@@ -612,7 +615,8 @@ class Asurascans extends paperback_extensions_common_1.Source {
                 case 'latest_updates':
                     param = `series?page=${page}`;
                     break;
-                default: throw new Error("Requested to view more items for a section ID which doesn't have view more: " + homepageSectionId);
+                default:
+                    throw new Error("Requested to view more items for a section ID which doesn't have view more: " + homepageSectionId);
             }
             const request = createRequestObject({
                 url: `${ASURA_BASE_URL}/${param}`,
@@ -628,6 +632,7 @@ class Asurascans extends paperback_extensions_common_1.Source {
             });
         });
     }
+    ;
     ///////////////////////////////
     // Manga Metadata Fetching
     ///////////////////////////////
