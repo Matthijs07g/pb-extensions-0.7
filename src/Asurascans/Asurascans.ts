@@ -82,29 +82,32 @@ export class Asurascans extends Source {
   }
 
   async getViewMoreItems(homepageSectionId: string, metadata: any): Promise<PagedResults> {
-      const page: number = metadata?.page ?? 1
-      let param = ''
+      const page: number = metadata?.page ?? 1;
+      let param = '';
 
       switch(homepageSectionId) {
-        case 'latest_updates':	param = `series?page=${page}`; break
-        default: throw new Error("Requested to view more items for a section ID which doesn't have view more: " + homepageSectionId)
+        case 'latest_updates':	
+          param = `series?page=${page}`; 
+          break;
+        default: 
+          throw new Error("Requested to view more items for a section ID which doesn't have view more: " + homepageSectionId);
       }
 
       const request = createRequestObject({
           url: `${ASURA_BASE_URL}/${param}`,
           method: 'GET'
-      })
+      });
 
-      const response = await this.requestManager.schedule(request, 1)
-      const $ = this.cheerio.load(response.data as string)
-      const manga = await parseViewMore(this, $)
+      const response = await this.requestManager.schedule(request, 1);
+      const $ = this.cheerio.load(response.data as string);
+      const manga = await parseViewMore(this, $);
 
-      metadata = !isLastPage($) ? { page: page + 1 } : undefined
+      metadata = !isLastPage($) ? { page: page + 1 } : undefined;
       return createPagedResults({
         results: manga,
         metadata
-      })
-  }
+      });
+  };
   
 
   ///////////////////////////////

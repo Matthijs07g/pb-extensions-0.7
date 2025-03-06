@@ -109,7 +109,7 @@ export const parseViewMore = async (
   const manga: MangaTile[] = []
   const collectedIds: string[] = []
 
-  for (const item of $('a', 'div.grid.grid-rows-1').toArray()) {
+  for (const item of $('a', 'div.grid.grid-cols-2').toArray()) {
       const slug =
           $(item).attr('href')?.replace(/\/$/, '')?.split('/').pop() ?? ''
       if (!slug) continue
@@ -143,20 +143,24 @@ export const parseViewMore = async (
 
 export const isLastPage = ($: CheerioAPI): boolean => {
   let isLast = true;
-  const hasItems = $('a', 'div.grid.grid-cols-2').toArray().length > 0
+  const hasItems = $('a', 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-3 p-4').toArray().length > 0
 
   if (hasItems) isLast = false
   return isLast
 }
 
 function getMangaId(source: any, slug: string): string {
-  let id: string | null = slug
+  const id = cleaner(slug) + '-'
+  return id
+}
+
+function cleaner(str: string): string {
+  let id: string | null = str
   id = id.replace(/\/$/, '');
   id = id.split('/').pop() ?? null
   id = id?.substring(0, id?.lastIndexOf('-')) ?? null
 
-  if(!id) throw new Error(`Failed to parse ID for slug: ${slug}`)
-
-    id = id + '-'
-    return id
+  if(!id) throw new Error(`Failed to parse ID for: ${str}`)
+  return id
+  
 }
