@@ -109,7 +109,7 @@ export const parseViewMore = async (
   const manga: MangaTile[] = []
   const collectedIds: string[] = []
 
-  for (const item of $('a', 'div.grid.grid-cols-2').toArray()) {
+  for (const item of $('a', 'div.grid.grid-rows-1').toArray()) {
       const slug =
           $(item).attr('href')?.replace(/\/$/, '')?.split('/').pop() ?? ''
       if (!slug) continue
