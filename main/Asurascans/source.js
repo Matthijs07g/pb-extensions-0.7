@@ -492,7 +492,7 @@ const parseViewMore = (source, $) => __awaiter(void 0, void 0, void 0, function*
     var _a, _b, _c, _d, _e, _f;
     const manga = [];
     const collectedIds = [];
-    for (const item of $('a', 'div.grid.grid-cols-2').toArray()) {
+    for (const item of $('a', 'div.grid.grid-rows-1').toArray()) {
         const slug = (_c = (_b = (_a = $(item).attr('href')) === null || _a === void 0 ? void 0 : _a.replace(/\/$/, '')) === null || _b === void 0 ? void 0 : _b.split('/').pop()) !== null && _c !== void 0 ? _c : '';
         if (!slug)
             continue;
