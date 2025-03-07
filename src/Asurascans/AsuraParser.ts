@@ -1,6 +1,7 @@
 import { CheerioAPI } from "cheerio";
 import { HomeSection, HomeSectionType, MangaTile } from "paperback-extensions-common";
 import { decode } from "html-entities";
+import { get } from "http";
 export const parseHomeSections = async (
   source: any,
   $: CheerioAPI,
@@ -18,9 +19,12 @@ export const parseHomeSections = async (
     try {
         const featuredElements = $('li.slide', 'ul.slider.animated').toArray();
         for (const manga of featuredElements) {
-            const title = $('.slide-title h4', manga).text().trim();
-            const id = $('a', manga).attr('href')?.split('/').slice(-2, -1)[0] ?? '';
-            const image = $('img', manga).attr('src') ?? '';
+          const slug = $('a', manga).attr('href')?.replace(/\/$/, '')?.split('/').pop() ?? '';
+          if(!slug) continue
+          const id = await getMangaId(source, slug);
+
+          const title: string = $('a', manga).text().trim() ?? '';
+          const image: string = $('img', manga).attr('src') ?? '';
             
             featuredItems.push(
                 createMangaTile({
@@ -46,17 +50,27 @@ export const parseHomeSections = async (
     try {
       const updateElements = $('div.w-full', 'div.grid.grid-rows-1').toArray();
       for (const manga of updateElements) {
-          const title = $('.post-title h4', manga).text().trim();
-          const id = $('a', manga).attr('href')?.split('/').slice(-2, -1)[0] ?? '';
-          const image = $('img', manga).attr('src') ?? '';
-          const subtitle = $('.chapter-item', manga).first().text().trim();
+          const slug = $('a', manga).attr('href')?.replace(/\/$/, '')?.split('/').pop() ?? '';
+          if(!slug) continue
+          const id = await getMangaId(source, slug);
+
+          const title: string = $('.col-span-9 > .font-medium > a', manga).first().text().trim() ?? '';
+          const image: string = $('img', manga).first().attr('src') ?? '';
+
+          let subtitle: string =
+            $('.flex.flex-col .flex-row a', manga).first().text().trim() ?? ''
+          let subtitleContext: string =
+            $('p.flex.items-end', manga).text().trim() ?? ''
+          if (subtitleContext.indexOf('Public in') !== -1) {
+            subtitle = '(Early Access) ' + subtitle
+          }
           
           latestItems.push(
               createMangaTile({
                   id: id,
                   image: image,
-                  title: createIconText({text: title}),
-                  subtitleText: createIconText({text: subtitle})
+                  title: createIconText({text: decode(title)}),
+                  subtitleText: createIconText({text: decode(subtitle)})
               })
           );
       }
@@ -77,15 +91,20 @@ export const parseHomeSections = async (
     try {
         const popularElements = $('a', 'div.flex-wrap.hidden').toArray();
         for (const manga of popularElements) {
-            const title = $('.post-title h4', manga).text().trim();
-            const id = $(manga).attr('href')?.split('/').slice(-2, -1)[0] ?? '';
-            const image = $('img', manga).attr('src') ?? '';
+            const slug = $('a', manga).attr('href')?.replace(/\/$/, '')?.split('/').pop() ?? '';
+            if(!slug) continue
+            const id = await getMangaId(source, slug);
+
+            const title: string = $('span.block.font-bold', manga).first().text().trim() ?? '';
+            const image: string = $('img', manga).first().attr('src') ?? '';
+            const subtitle: string = $('span.block.font-bold', manga).first().next().text().trim() ?? '';
             
             popularItems.push(
                 createMangaTile({
                     id: id,
                     image: image,
-                    title: createIconText({text: title})
+                    title: createIconText({text: decode(title)}),
+                    subtitleText: createIconText({text: decode(subtitle)})
                 })
             );
         }
