@@ -2993,7 +2993,7 @@ exports.isLastPage = exports.parseViewMore = exports.parseHomeSections = void 0;
 const paperback_extensions_common_1 = require("paperback-extensions-common");
 const html_entities_1 = require("html-entities");
 const parseHomeSections = (source, $, sectionCallback) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t;
     try {
         // Create featured section...
         const featuredSection = createHomeSection({
@@ -3005,9 +3005,12 @@ const parseHomeSections = (source, $, sectionCallback) => __awaiter(void 0, void
         try {
             const featuredElements = $('li.slide', 'ul.slider.animated').toArray();
             for (const manga of featuredElements) {
-                const title = $('.slide-title h4', manga).text().trim();
-                const id = (_b = (_a = $('a', manga).attr('href')) === null || _a === void 0 ? void 0 : _a.split('/').slice(-2, -1)[0]) !== null && _b !== void 0 ? _b : '';
-                const image = (_c = $('img', manga).attr('src')) !== null && _c !== void 0 ? _c : '';
+                const slug = (_c = (_b = (_a = $('a', manga).attr('href')) === null || _a === void 0 ? void 0 : _a.replace(/\/$/, '')) === null || _b === void 0 ? void 0 : _b.split('/').pop()) !== null && _c !== void 0 ? _c : '';
+                if (!slug)
+                    continue;
+                const id = yield getMangaId(source, slug);
+                const title = (_d = $('a', manga).text().trim()) !== null && _d !== void 0 ? _d : '';
+                const image = (_e = $('img', manga).attr('src')) !== null && _e !== void 0 ? _e : '';
                 featuredItems.push(createMangaTile({
                     id: id,
                     image: image,
@@ -3029,15 +3032,22 @@ const parseHomeSections = (source, $, sectionCallback) => __awaiter(void 0, void
         try {
             const updateElements = $('div.w-full', 'div.grid.grid-rows-1').toArray();
             for (const manga of updateElements) {
-                const title = $('.post-title h4', manga).text().trim();
-                const id = (_e = (_d = $('a', manga).attr('href')) === null || _d === void 0 ? void 0 : _d.split('/').slice(-2, -1)[0]) !== null && _e !== void 0 ? _e : '';
-                const image = (_f = $('img', manga).attr('src')) !== null && _f !== void 0 ? _f : '';
-                const subtitle = $('.chapter-item', manga).first().text().trim();
+                const slug = (_h = (_g = (_f = $('a', manga).attr('href')) === null || _f === void 0 ? void 0 : _f.replace(/\/$/, '')) === null || _g === void 0 ? void 0 : _g.split('/').pop()) !== null && _h !== void 0 ? _h : '';
+                if (!slug)
+                    continue;
+                const id = yield getMangaId(source, slug);
+                const title = (_j = $('.col-span-9 > .font-medium > a', manga).first().text().trim()) !== null && _j !== void 0 ? _j : '';
+                const image = (_k = $('img', manga).first().attr('src')) !== null && _k !== void 0 ? _k : '';
+                let subtitle = (_l = $('.flex.flex-col .flex-row a', manga).first().text().trim()) !== null && _l !== void 0 ? _l : '';
+                let subtitleContext = (_m = $('p.flex.items-end', manga).text().trim()) !== null && _m !== void 0 ? _m : '';
+                if (subtitleContext.indexOf('Public in') !== -1) {
+                    subtitle = '(Early Access) ' + subtitle;
+                }
                 latestItems.push(createMangaTile({
                     id: id,
                     image: image,
-                    title: createIconText({ text: title }),
-                    subtitleText: createIconText({ text: subtitle })
+                    title: createIconText({ text: (0, html_entities_1.decode)(title) }),
+                    subtitleText: createIconText({ text: (0, html_entities_1.decode)(subtitle) })
                 }));
             }
             latestSection.items = latestItems;
@@ -3056,13 +3066,18 @@ const parseHomeSections = (source, $, sectionCallback) => __awaiter(void 0, void
         try {
             const popularElements = $('a', 'div.flex-wrap.hidden').toArray();
             for (const manga of popularElements) {
-                const title = $('.post-title h4', manga).text().trim();
-                const id = (_h = (_g = $(manga).attr('href')) === null || _g === void 0 ? void 0 : _g.split('/').slice(-2, -1)[0]) !== null && _h !== void 0 ? _h : '';
-                const image = (_j = $('img', manga).attr('src')) !== null && _j !== void 0 ? _j : '';
+                const slug = (_q = (_p = (_o = $('a', manga).attr('href')) === null || _o === void 0 ? void 0 : _o.replace(/\/$/, '')) === null || _p === void 0 ? void 0 : _p.split('/').pop()) !== null && _q !== void 0 ? _q : '';
+                if (!slug)
+                    continue;
+                const id = yield getMangaId(source, slug);
+                const title = (_r = $('span.block.font-bold', manga).first().text().trim()) !== null && _r !== void 0 ? _r : '';
+                const image = (_s = $('img', manga).first().attr('src')) !== null && _s !== void 0 ? _s : '';
+                const subtitle = (_t = $('span.block.font-bold', manga).first().next().text().trim()) !== null && _t !== void 0 ? _t : '';
                 popularItems.push(createMangaTile({
                     id: id,
                     image: image,
-                    title: createIconText({ text: title })
+                    title: createIconText({ text: (0, html_entities_1.decode)(title) }),
+                    subtitleText: createIconText({ text: (0, html_entities_1.decode)(subtitle) })
                 }));
             }
             popularSection.items = popularItems;
