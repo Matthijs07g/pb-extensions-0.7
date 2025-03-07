@@ -3071,7 +3071,7 @@ const parseHomeSections = (source, $, sectionCallback) => __awaiter(void 0, void
                     continue;
                 const id = yield getMangaId(source, slug);
                 const title = (_r = $('span.block.font-bold', manga).first().text().trim()) !== null && _r !== void 0 ? _r : '';
-                const image = (_s = $('img', manga).first().attr('src')) !== null && _s !== void 0 ? _s : '';
+                const image = (_s = $('img', manga).attr('src')) !== null && _s !== void 0 ? _s : '';
                 const subtitle = (_t = $('span.block.font-bold', manga).first().next().text().trim()) !== null && _t !== void 0 ? _t : '';
                 popularItems.push(createMangaTile({
                     id: id,
