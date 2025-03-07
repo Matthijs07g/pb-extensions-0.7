@@ -96,7 +96,7 @@ export const parseHomeSections = async (
             const id = await getMangaId(source, slug);
 
             const title: string = $('span.block.font-bold', manga).first().text().trim() ?? '';
-            const image: string = $('img', manga).first().attr('src') ?? '';
+            const image: string = $('img', manga).attr('src') ?? ''
             const subtitle: string = $('span.block.font-bold', manga).first().next().text().trim() ?? '';
             
             popularItems.push(
